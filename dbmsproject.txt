@@ -1,0 +1,164 @@
+
+
+C:\Program Files\mysql\server\bin
+-----------------------------------------------------------------------------
+##CREATING USER TABLE
+CREATE TABLE user(
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `firstName` VARCHAR(50) NULL DEFAULT NULL,
+  `lastName` VARCHAR(50) NULL DEFAULT NULL,
+  `username` VARCHAR(50) NULL DEFAULT NULL,
+  `mobile` VARCHAR(15) NULL,
+  `email` VARCHAR(50) NULL,
+  `passwordHash` VARCHAR(32) NOT NULL,
+  `registeredAt` DATETIME NOT NULL,
+  `intro` TINYTEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `uq_username` (`username` ASC),
+  UNIQUE INDEX `uq_mobile` (`mobile` ASC),
+  UNIQUE INDEX `uq_email` (`email` ASC) );
+
+##INSERTING VALUES INTO USER TABLE
+
+INSERT INTO user(firstname,lastname,username,mobile,email,passwordhash,registeredAt,intro)
+VALUES('mat','jonas','matty','808210','mat@goodwork.com','simon','2020-04-18 09:30:52','good')
+ 
+--------------------------------------------------------------------------
+
+##CREATING PRODUCT TABLE;
+CREATE TABLE product(
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(75) NOT NULL,
+  `summary` TINYTEXT NULL,
+  `createdAt` DATETIME NOT NULL,
+  PRIMARY KEY (`id`) 
+   
+  
+##INSERTING VALUES INTO PRODUCT TABLE
+
+INSERT INTO product(title,summary,createdAt)
+VALUES('shoes','sports','2020-12-02 08:30:14')
+
+------------------------------------------------------------------
+
+##CREATING TABLE BRAND
+
+CREATE TABLE brand(
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(75) NOT NULL,
+  `createdAt` DATETIME NOT NULL,
+  `content` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) 
+)
+
+##INSERTING VALUES IN BRAND TABLE
+
+INSERT INTO brand(title,createdAt,content)
+Values('puma','2020-02-03 12:15:30','shoes')
+
+-----------------------------------------------------------------
+
+##CREATING A cust_ORDER TABLE
+
+CREATE TABLE cust_order(
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `userId` BIGINT NOT NULL,
+  `status` SMALLINT(6) NOT NULL DEFAULT 0,
+  `subTotal` FLOAT NOT NULL DEFAULT 0,
+  `itemDiscount` FLOAT NOT NULL DEFAULT 0,
+  `tax` FLOAT NOT NULL DEFAULT 0,
+  `grandTotal` FLOAT NOT NULL DEFAULT 0,
+  `createdAt` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`userId`)
+  REFERENCES user(`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION)
+
+##INSERTING VALUES IN cust_order table
+
+INSERT INTO cust_order(userId,status,subtotal,itemDiscount,tax,grandtotal,createdAt)
+VALUES(1,2,'500','15.0','20','505.0','2020-05-05 12:15:30')
+
+-----------------------------------------------------------------------
+
+##CREATING ORDER ITEM TABLE
+
+CREATE TABLE item(
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `productId` BIGINT NOT NULL,
+  `brandId` BIGINT NOT NULL,
+  `cust_orderId` BIGINT NOT NULL,
+  `mrp` FLOAT NOT NULL DEFAULT 0,
+  `discount` FLOAT NOT NULL DEFAULT 0,
+  `price` FLOAT NOT NULL DEFAULT 0,
+  `quantity` SMALLINT(6) NOT NULL DEFAULT 0,
+  `sold` SMALLINT(6) NOT NULL DEFAULT 0,
+  `available` SMALLINT(6) NOT NULL DEFAULT 0,
+  `defective` SMALLINT(6) NOT NULL DEFAULT 0,
+  `createdBy` BIGINT NOT NULL,
+  `createdAt` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`productId`)
+  REFERENCES product(`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+  FOREIGN KEY (`brandId`)
+  REFERENCES brand(`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION, 
+  FOREIGN KEY (`cust_orderId`)
+  REFERENCES cust_order(`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION
+
+##INSERTING VALUES INTO OUR ITEM TABLE
+
+INSERT INTO item (productId,brandId,cust_orderId,mrp,discount,price,quantity,sold,available,defective,createdBy,createdAt)
+VALUES(10,1,1,500.0,15.0,485.0,2,2,8,1,100,'2020-05-05 12:15:30')
+
+-----------------------------------------------------------------------
+
+
+##CREATING TABLE order_item
+
+CREATE TABLE order_item(
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `productId` BIGINT NOT NULL,
+  `itemId` BIGINT NOT NULL,
+  `cust_orderId` BIGINT NOT NULL,
+  `sku` VARCHAR(100) NOT NULL,
+  `price` FLOAT NOT NULL DEFAULT 0,
+  `discount` FLOAT NOT NULL DEFAULT 0,
+  `quantity` SMALLINT(6) NOT NULL DEFAULT 0,
+  `createdAt` DATETIME NOT NULL,
+  `content` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`productId`)
+  REFERENCES product(`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+  FOREIGN KEY (`itemId`)
+  REFERENCES item(`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+  FOREIGN KEY (`cust_orderId`)
+  REFERENCES cust_order(`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION
+)
+
+
+##INSERTING VALUES INTO TABLE order_item
+
+INSERT INTO item(productId,itemId,cust_orderId,sku,price,discount,quantity,createdAt,content)
+VALUES(10,1,1,'AFP1 38BR',500,'0.0',2,'2020-12-02 08:30:14','shoes')
+
+---------------------------------------------------------------------------
+
+
+
+
+
+
+
